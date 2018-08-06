@@ -1,35 +1,18 @@
-import * as turf from '@turf/turf';
-import fs from "fs";
+import express from "express";
+import bodyParser from 'body-parser';
+import routes from './src/routes/routes';
 
-const calculateErrorEstimation = (tRef, tEval) => {
-    const tEvalCoords = turf.getCoords(tEval);
-    var estimation = [];
-    var nearestPoint;
-    tEvalCoords.forEach(point => {
-        nearestPoint = turf.nearestPointOnLine(tRef, point);
-        estimation.push(nearestPoint.properties.dist);
-    });
-    return estimation;
-}
+var app = express();
+var PORT = 3000;
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json());
 
-const getTrajectories = (data) => {
-    const tRef = turf.lineString(turf.coordAll(data.features[0]));
-    const tEval = turf.lineString(turf.coordAll(data.features[1]));
-    return {tRef: tRef, tEval: tEval};
-}
+routes(app);
 
-const readGeoJsonFile = (filename) => {
-   try {
-    const data = fs.readFileSync("./tests/" + filename + ".geojson", 'utf8');
-    const geoJsonObject = JSON.parse(data);
-    return geoJsonObject;
-   } catch (error) {
-       console.log(error);
-   }
-}
+app.get('/', (req, res) => 
+  res.send(`server is running in port: ${PORT}`) 
+);
 
-const geoJsonData = readGeoJsonFile("test1");
-const trajectories = getTrajectories(geoJsonData);
-const errorEsimation = calculateErrorEstimation(trajectories.tRef, trajectories.tEval);
-
-console.log(errorEsimation);
+app.listen(PORT, () =>
+    console.log(`server is running in port: ${PORT}`)
+);
