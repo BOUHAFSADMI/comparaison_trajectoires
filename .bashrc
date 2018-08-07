@@ -1,1 +1,5 @@
-{ "presets": ["env"] }
+{
+    "presets": [
+        "es2015"
+    ]
+}

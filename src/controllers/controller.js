@@ -1,20 +1,26 @@
-import * as turf from '@turf/turf';
-import fs from "fs";
+const turf = require('@turf/turf');
+const fs = require("fs");
 
 
-export const getErrorEstimationV1 = (req, res) => {
+const getErrorEstimationV1 = (req, res) => {
     try {
         const num = req.params.num;
-        const geoJsonData = readGeoJsonFile("test"+num);
-        const trajectories = getTrajectories(geoJsonData);
-        const errorEsimation = calculateErrorEstimation(trajectories.tRef, trajectories.tEval);
+        const filename = "test"+num;
+        const errorEsimation = getErrorEstimation(filename);
         res.json(errorEsimation);
     } catch (error) {
         res.send(error);
     }
 }
 
-export const getErrorEstimationV2 = (req, res) => {
+const getErrorEstimation = (filename) => {
+    const geoJsonData = readGeoJsonFile(filename);
+    const trajectories = getTrajectories(geoJsonData);
+    const errorEsimation = calculateErrorEstimation(trajectories.tRef, trajectories.tEval);
+    return errorEsimation;
+}
+
+const getErrorEstimationV2 = (req, res) => {
     try {
         const tRef = req.tRef;
         const tEval = req.tEval;
@@ -25,7 +31,7 @@ export const getErrorEstimationV2 = (req, res) => {
     }
 }
 
-export const isGeoJsonValid = (req, res, next) => {
+const isGeoJsonValid = (req, res, next) => {
     const data = req.body;
     if(data.features[1] === undefined)
        res.status(400).send({message: 'geoJSON file is invalid'});
@@ -37,6 +43,7 @@ export const isGeoJsonValid = (req, res, next) => {
     }
     next();
 } 
+
 
 const calculateErrorEstimation = (tRef, tEval) => {
     const tEvalCoords = turf.getCoords(tEval);
@@ -63,4 +70,11 @@ const readGeoJsonFile = (filename) => {
    } catch (error) {
        console.log(error);
    }
+}
+
+module.exports = {
+    getErrorEstimationV1: getErrorEstimationV1,
+    getErrorEstimationV2: getErrorEstimationV2,
+    isGeoJsonValid: isGeoJsonValid,
+    getErrorEstimation: getErrorEstimation,
 }
