@@ -1,11 +1,11 @@
-import {getErrorEstimationV1, getErrorEstimationV2, isGeoJsonValid} from "../controllers/controller";
+const controller = require("../controllers/controller");
 
 const routes = (app) => {
     app.route('/test/:num')
-    .get(getErrorEstimationV1);
+    .get(controller.getErrorEstimationV1);
 
     app.route('/test')
-    .post(isGeoJsonValid, getErrorEstimationV2);
+    .post(controller.isGeoJsonValid, controller.getErrorEstimationV2);
 }
 
-export default routes;
+module.exports = routes;
