@@ -4,13 +4,14 @@ const routes = require("./src/routes/routes");
 
 var app = express();
 const PORT = 3000;
+// Allow json format
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
 routes(app);
 
 app.get("/", (req, res) => 
-  res.send(`server is running in port: ${PORT}`) 
+  res.send(`server is running in port: ${PORT}`)
 );
 
 app.listen(PORT, () =>

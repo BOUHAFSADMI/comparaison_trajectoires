@@ -2,11 +2,6 @@ var gulp = require("gulp");
 var jshint = require("gulp-jshint"); 
 var jscs = require("gulp-jscs");
 
-
-gulp.task("default", function() {
-  console.log("gulp works fine!");
-});
-
 const paths = [
     "./*.js",
     "./controllers/*.js", 
@@ -15,7 +10,6 @@ const paths = [
 gulp.task("inspector", ["jshint", "jscs"], () => {
     console.log("inspector..");
 });
-
 
 gulp.task("jshint", () => {
     return gulp
